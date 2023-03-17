@@ -26,6 +26,8 @@ const Navigation = () => {
     return(
         <Stack.Navigator screenOptions={{headerShown:false}}>
             <Stack.Screen name='MainTab' component={MainTab}/>
+            <Stack.Screen name='ProductDetailScreen' component={ProductDetailScreen}/>
+
         
         </Stack.Navigator>
     )
