@@ -6,6 +6,7 @@ import axios from 'axios';
 import {end_points} from '../../API';
 import {IProduct} from '../models/ProductModel';
 import Products from '../components/Products';
+import Header from '../components/Header';
 
 const ListScreen = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -17,9 +18,7 @@ const ListScreen = () => {
   }, []);
   return (
     <View>
-      <View style={styles.header}>
-        <Text style={{color: '#fff', fontSize: 25}}>E-Market</Text>
-      </View>
+      <Header/>
       <View style={{paddingHorizontal: 20, paddingVertical: 10}}>
         <TextInput
           style={{borderWidth: 2, height: 40}}
@@ -37,7 +36,7 @@ export default ListScreen;
 const styles = StyleSheet.create({
   container: {},
   header: {
-    backgroundColor: 'lightblue',
+    backgroundColor: Colors.blue,
     height: 80,
     justifyContent: 'center',
     paddingHorizontal: 20,
