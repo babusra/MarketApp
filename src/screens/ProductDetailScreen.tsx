@@ -17,7 +17,7 @@ const ProductDetailScreen = (props: Props) => {
   console.log(product);
   return (
     <View>
-      <Header title={product.brand + ' ' + product.name + ' ' + product.model}
+      <Header showBackButton title={product.brand + ' ' + product.name + ' ' + product.model}
       />
       <View style={styles.body}>
         <Image

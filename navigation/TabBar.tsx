@@ -45,7 +45,7 @@ export function TabBar({state, descriptors, navigation}: any) {
             onPress={onPress}
             onLongPress={onLongPress}
             style={{flex: 1}}>
-              <View style={{borderWidth:1,borderColor:Colors.black}}/>
+              <View style={{borderWidth:1,borderColor:Colors.grey}}/>
             <View style={{alignSelf:'center',marginVertical:30}}>
               <Icon name={options.tabBarIcon} size={30} color={Colors.black} />
             </View>

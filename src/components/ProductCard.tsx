@@ -40,7 +40,7 @@ export default ProductCard;
 const styles = StyleSheet.create({
   container: {
     borderWidth: 2,
-    borderColor: 'lightgrey',
+    borderColor: Colors.grey,
     borderRadius: 8,
     height: verticalScale(250),
     width: horizontalScale(150),
@@ -53,11 +53,18 @@ const styles = StyleSheet.create({
     height: verticalScale(120),
     alignSelf: 'center',
   },
-  text_price: {color: Colors.blue},
-  text_productName: {fontSize: 12},
-  button: {backgroundColor: Colors.blue, borderRadius: 4},
+  text_price: {
+    color: Colors.blue,
+  },
+  text_productName: {
+    fontSize: 12,
+  },
+  button: {
+    backgroundColor: Colors.blue,
+    borderRadius: 4,
+  },
   button_text: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 12,
     padding: moderateScale(9),
     textAlign: 'center',
