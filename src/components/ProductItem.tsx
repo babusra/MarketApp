@@ -3,22 +3,44 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {moderateScale, verticalScale} from '../constants/Dimension';
 import {Colors} from '../constants/Colors';
+import {IProduct} from '../models/ProductModel';
+import {useDispatch, useSelector} from 'react-redux';
+import {productAmountDecrement, productAmountIncrement} from '../../reduxTKit/features/ProductSlice';
+import {RootState} from '../../reduxTKit/Store';
 
-const ProductItem = () => {
+interface Props {
+  product: IProduct;
+}
+
+const ProductItem = (props: Props) => {
+  const dispatch = useDispatch();
+  const {product} = props;
+
+  const incremetProductAmount = (item: IProduct) => {
+    dispatch(productAmountIncrement(item));
+  };
+
+  const decrementProductAmount = (item: IProduct) => {
+    dispatch(productAmountDecrement(item));
+  };
   return (
     <View style={styles.container}>
       <View>
-        <Text>Samsung s22</Text>
-        <Text style={{color:Colors.blue}}>12.000 ₺</Text>
+        <Text>{product.name}</Text>
+        <Text style={{color: Colors.blue}}>{product.price} ₺</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          onPress={() => decrementProductAmount(product)}
+          style={styles.button}>
           <Icon name="minus" size={15} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.amount_text}>
-          <Text style={{color: Colors.white}}>45</Text>
+          <Text style={{color: Colors.white}}>{product.total}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          onPress={() => incremetProductAmount(product)}
+          style={styles.button}>
           <Icon name="plus" size={15} />
         </TouchableOpacity>
       </View>
@@ -32,8 +54,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical:verticalScale(10),
-    alignItems:'center'
+    marginVertical: verticalScale(10),
+    alignItems: 'center',
   },
   amount_text: {
     textAlign: 'center',
