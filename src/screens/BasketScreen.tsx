@@ -2,31 +2,40 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Header from '../components/Header';
 import ProductItem from '../components/ProductItem';
-import {horizontalScale, moderateScale, verticalScale} from '../constants/Dimension';
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from '../constants/Dimension';
 import {Colors} from '../constants/Colors';
+import ProductsInBasket from '../components/ProductsInBasket';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../reduxTKit/Store';
 
 const BasketScreen = () => {
+  const totalProductPrice = useSelector(
+    (state: RootState) => state.product.value.totalProductPrice,
+  );
+
   return (
-    <View >
+    <View>
       <Header />
       <View style={styles.body}>
-      <ProductItem />
-      <ProductItem />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop:100
-        }}>
-        <View>
-          <Text style={{color: Colors.blue, fontSize: 16}}>Price:</Text>
-          <Text>12.000 ₺</Text>
+        <ProductsInBasket />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 100,
+          }}>
+          <View>
+            <Text style={{color: Colors.blue, fontSize: 16}}>Price:</Text>
+            <Text>{totalProductPrice} ₺</Text>
+          </View>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.button_text}>Complete</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.button_text}>Add to Cart</Text>
-        </TouchableOpacity>
-      </View>
       </View>
     </View>
   );
