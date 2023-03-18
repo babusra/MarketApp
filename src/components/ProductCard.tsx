@@ -8,14 +8,34 @@ import {
 } from '../constants/Dimension';
 import {Colors} from '../constants/Colors';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  addToBasketAction,
+  productAmountIncrement,
+} from '../../reduxTKit/features/ProductSlice';
+import {RootState} from '../../reduxTKit/Store';
 
 interface Props {
   product: IProduct;
 }
 
 const ProductCard = (props: Props) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const {product} = props;
+
+  const products = useSelector(
+    (state: RootState) => state.product.value.productsInBasket,
+  );
+
+  const onAddToBasket = (item: IProduct) => {
+
+    
+        dispatch(addToBasketAction(item));
+
+      
+    
+  };
 
   return (
     <TouchableOpacity
@@ -28,9 +48,11 @@ const ProductCard = (props: Props) => {
         source={{uri: 'https://placeimg.com/640/480/abstract'}}
       />
       <Text style={styles.text_price}>{product.price} ₺</Text>
-      <Text style={styles.text_productName}>{product.brand}</Text>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.button_text}>Add to Cart</Text>
+      <Text style={styles.text_productName}>{product.name}</Text>
+      <TouchableOpacity
+        onPress={() => onAddToBasket(product)}
+        style={styles.button}>
+        <Text style={styles.button_text}>Add to Card</Text>
       </TouchableOpacity>
     </TouchableOpacity>
   );
