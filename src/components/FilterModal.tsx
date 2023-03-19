@@ -13,15 +13,21 @@ import FilterItems from './FilterItems';
 import {moderateScale, verticalScale} from '../constants/Dimension';
 import {IProduct} from '../models/ProductModel';
 import {Colors} from '../constants/Colors';
+import {useDispatch, useSelector} from 'react-redux';
+import {filteredProductAction} from '../../reduxTKit/features/ProductSlice';
+import {RootState} from '../../reduxTKit/Store';
+import {useNavigation} from '@react-navigation/native';
+import { dateFiltersAction } from '../../reduxTKit/features/FilterSlice';
 
 interface Props {
   products: IProduct[];
-  onPressClose:()=>void
+  onPressClose: () => void;
 }
 
 const FilterModal = (props: Props) => {
   const {products} = props;
-
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [searchItem, setSearchItem] = useState('');
 
   const [dateFilter, setDateFilter] = useState([
@@ -34,6 +40,7 @@ const FilterModal = (props: Props) => {
   const [filteredBrand, setFilteredBrand] = useState<any[]>([]);
   const [filteredModel, setFilteredModel] = useState<any[]>([]);
 
+ const date= useSelector((state:RootState)=>state.filter)
   const onSearchFilter = (text: string, filterType: any) => {
     if (text) {
       const filteredData: IProduct[] = products.filter(item =>
@@ -81,6 +88,74 @@ const FilterModal = (props: Props) => {
       );
     }
   };
+  const onFilterByAllOptions = () => {
+    let data1 = Array.from(
+      new Set(filteredBrand.filter(x => x.selected).map(item => item.option)),
+    );
+    let data2 = Array.from(
+      new Set(filteredModel.filter(x => x.selected).map(item => item.option)),
+    );
+
+    let selectedDateType = dateFilter.find(item => item.selected)?.option;
+
+    switch (selectedDateType) {
+      case 'Old to new':
+        return dispatch(
+          filteredProductAction(
+            products
+              .filter(
+                item =>
+                  data1.includes(item.brand) && data2.includes(item.model),
+              )
+              .sort((a, b) => {
+                return new Date(a.createdAt) - new Date(b.createdAt);
+              }),
+          ),
+        );
+      case 'New to old':
+        return dispatch(
+          filteredProductAction(
+            products
+              .filter(
+                item =>
+                  data1.includes(item.brand) && data2.includes(item.model),
+              )
+              .sort((a, b) => {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+              }),
+          ),
+        );
+
+      case 'Price high to low':
+        return dispatch(
+          filteredProductAction(
+            products
+              .filter(
+                item =>
+                  data1.includes(item.brand) && data2.includes(item.model),
+              )
+              .sort((a, b) => {
+                return a.price - b.price;
+              }),
+          ),
+        );
+      case 'Price low to high':
+        return dispatch(
+          filteredProductAction(
+            products
+              .filter(
+                item =>
+                  data1.includes(item.brand) && data2.includes(item.model),
+              )
+              .sort((a, b) => {
+                return b.price - a.price;
+              }),
+          ),
+        );
+      default:
+        return products;
+    }
+  };
 
   useEffect(() => {
     setFilteredBrand(
@@ -103,7 +178,8 @@ const FilterModal = (props: Props) => {
   }, []);
 
   return (
-    <ScrollView style={{paddingTop: moderateScale(50),backgroundColor:Colors.white}}>
+    <ScrollView
+      style={{paddingTop: moderateScale(50), backgroundColor: Colors.white}}>
       <View
         style={{
           flexDirection: 'row',
@@ -112,7 +188,7 @@ const FilterModal = (props: Props) => {
           borderBottomWidth: 2,
           borderBottomColor: Colors.grey,
         }}>
-        <TouchableOpacity onPress={()=>props.onPressClose()}>
+        <TouchableOpacity onPress={() => props.onPressClose()}>
           <Icon name="close" size={25} />
         </TouchableOpacity>
         <Text style={{alignSelf: 'center', paddingRight: '45%', fontSize: 25}}>
@@ -128,19 +204,22 @@ const FilterModal = (props: Props) => {
           style={{borderBottomWidth: 2, borderBottomColor: Colors.grey}}
           renderItem={({item}) => {
             return (
-              <FilterItems.DateFilter dateOption={item} onPress={() => {
-                let temp= [];
-                temp = dateFilter.slice();
-                temp.map(x=>{
-                  if(x.option===item.option){
-                      x.selected=true
-                  }
-                  else{
-                        x.selected=false
-                  }
-                })
-                setDateFilter(temp)
-              }} />
+              <FilterItems.DateFilter
+                dateOption={item}
+                onPress={() => {
+                  let temp = [];
+                  temp = dateFilter.slice();
+                  temp.map(x => {
+                    if (x.option === item.option) {
+                      x.selected = true;
+                    } else {
+                      x.selected = false;
+                    }
+                  });
+                  setDateFilter(temp);
+                  dispatch(dateFiltersAction(temp))
+                }}
+              />
             );
           }}
         />
@@ -180,14 +259,14 @@ const FilterModal = (props: Props) => {
               <FilterItems.OptionFilter
                 option={item}
                 onPress={() => {
-                  let temp= [];
+                  let temp = [];
                   temp = filteredBrand.slice();
-                  temp.map(x=>{
-                    if(x.option===item.option){
-                        x.selected=true
+                  temp.map(x => {
+                    if (x.option === item.option) {
+                      x.selected = true;
                     }
-                  })
-                  setFilteredBrand(temp)
+                  });
+                  setFilteredBrand(temp);
                 }}
               />
             );
@@ -226,22 +305,41 @@ const FilterModal = (props: Props) => {
           key={'SortByModel'}
           renderItem={({item}) => {
             return (
-              <FilterItems.OptionFilter option={item} onPress={() => {
-                let temp= [];
-                temp = filteredModel.slice();
-                temp.map(x=>{
-                  if(x.option===item.option){
-                      x.selected=!x.selected
-                  }
-                })
-                setFilteredModel(temp)
-              }} />
+              <FilterItems.OptionFilter
+                option={item}
+                onPress={() => {
+                  let temp = [];
+                  temp = filteredModel.slice();
+                  temp.map(x => {
+                    if (x.option === item.option) {
+                      x.selected = !x.selected;
+                    }
+                  });
+                  setFilteredModel(temp);
+                }}
+              />
             );
           }}
         />
       </View>
-      <TouchableOpacity style={{height:moderateScale(50),width:'90%',borderRadius:10,backgroundColor:Colors.blue,justifyContent:'center',marginBottom:moderateScale(70),marginLeft:moderateScale(20)}}>
-        <Text style={{color:Colors.white,fontSize:20,paddingHorizontal:'40%'}}>Primary</Text>
+      <TouchableOpacity
+        onPress={() => {
+          onFilterByAllOptions();
+          props.onPressClose()
+        }}
+        style={{
+          height: moderateScale(50),
+          width: '90%',
+          borderRadius: 10,
+          backgroundColor: Colors.blue,
+          justifyContent: 'center',
+          marginBottom: moderateScale(70),
+          marginLeft: moderateScale(20),
+        }}>
+        <Text
+          style={{color: Colors.white, fontSize: 20, paddingHorizontal: '40%'}}>
+          Primary
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
