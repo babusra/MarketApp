@@ -1,4 +1,5 @@
 export interface IProduct {
+  createdAt: string;
   brand: string;
   description: string;
   image: any;
@@ -6,5 +7,6 @@ export interface IProduct {
   name: string;
   price: string;
   id: string;
-  total:number;
+  total: number;
+  isFavorite:boolean;
 }

@@ -18,7 +18,7 @@ const BasketScreen = () => {
   );
 
   return (
-    <View>
+    <View style={{flex:1}}>
       <Header />
       <View style={styles.body}>
         <ProductsInBasket />
@@ -26,7 +26,11 @@ const BasketScreen = () => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginTop: 100,
+            position:'absolute',
+            width:'100%',
+            alignSelf:'center',
+            bottom:moderateScale(10)
+
           }}>
           <View>
             <Text style={{color: Colors.blue, fontSize: 16}}>Price:</Text>
@@ -45,6 +49,7 @@ export default BasketScreen;
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: horizontalScale(15),
+    flex:1
   },
   button: {
     backgroundColor: Colors.blue,

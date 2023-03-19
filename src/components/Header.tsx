@@ -25,7 +25,7 @@ const Header = (props: Props) => {
         </TouchableOpacity>
       )}
 
-      <Text numberOfLines={2} style={styles.title}>
+      <Text numberOfLines={1} style={styles.title}>
         {title || 'E-Market'}
       </Text>
     </SafeAreaView>
@@ -41,5 +41,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  title: {color: '#fff', fontSize: 25, paddingHorizontal: 20},
+  title: {color: '#fff', fontSize: 25, paddingHorizontal: 10},
 });

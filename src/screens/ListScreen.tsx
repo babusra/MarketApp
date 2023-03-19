@@ -27,6 +27,9 @@ const ListScreen = () => {
   const products = useSelector(
     (state: RootState) => state.product.value.allProducts,
   );
+  console.log(products)
+  const filteredProductsByOptions = useSelector((state:RootState)=>state.product.value.filteredProducts)
+  console.log(filteredProductsByOptions)
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [searchItem, setSearchItem] = useState('');
   const [visible, setVisible] = useState(false);
@@ -41,7 +44,7 @@ const ListScreen = () => {
 
   const onSearchFilter = (text: string) => {
     if (text) {
-      const filteredData: IProduct[] = products.filter(item =>
+      const filteredData: IProduct[] = (filteredProductsByOptions.length!==0? filteredProductsByOptions: products).filter(item =>
         item.name.toLocaleLowerCase().startsWith(text.toLocaleLowerCase()),
       );
       setFilteredProducts(filteredData);
@@ -49,7 +52,7 @@ const ListScreen = () => {
       setFilteredProducts(products);
     }
   };
-console.log(products)
+
   return (
     <View>
       <Header />
@@ -77,7 +80,7 @@ console.log(products)
          <FilterModal products={products}  onPressClose={()=>setVisible(false)}/>
         </BottomSheet>
         <Products
-          products={filteredProducts.length !== 0 ? filteredProducts : products}
+          products={filteredProducts.length !== 0 ? filteredProducts :filteredProductsByOptions.length!==0? filteredProductsByOptions: products}
         />
       </View>
     </View>
