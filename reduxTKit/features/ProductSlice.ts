@@ -5,6 +5,7 @@ import {IInitialProductState} from '../../src/models/InitialProductState';
 import {IProduct} from '../../src/models/ProductModel';
 
 const initialState: IInitialProductState = {
+  allProducts: [],
   productsInBasket: [],
   totalProductPrice: 0,
 };
@@ -13,19 +14,22 @@ const ProductSlice = createSlice({
   name: 'product',
   initialState: {value: initialState},
   reducers: {
+    allProductAction: (state, action) => {
+      state.value.allProducts = action.payload;
+      state.value.allProducts.map(function (obj) {
+        obj.total = 0;
+      })
+    },
     addToBasketAction: (state, action) => {
-
       let existingProducts = current(state).value.productsInBasket.find(
-        (item: IProduct) => {item.id===action.payload.id},
-
+        (item: IProduct) => {
+          item.id === action.payload.id;
+        },
       );
-      console.log(current(state).value.productsInBasket.find(x=>x.id==="4"))
-      if(existingProducts===undefined){
-        state.value.productsInBasket.push({...action.payload,total:1})
-
-      } else{
+      if (existingProducts === undefined) {
+        state.value.productsInBasket.push({...action.payload, total: 1});
+      } else {
         existingProducts.total++;
-
       }
 
       var temp = 0;
@@ -76,6 +80,7 @@ const ProductSlice = createSlice({
 
 export default ProductSlice.reducer;
 export const {
+  allProductAction,
   addToBasketAction,
   productAmountIncrement,
   productAmountDecrement,
