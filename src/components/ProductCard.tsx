@@ -11,16 +11,17 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   addToBasketAction,
+  addToFavoritesAction,
   productAmountIncrement,
 } from '../../reduxTKit/features/ProductSlice';
 import {RootState} from '../../reduxTKit/Store';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Props {
   product: IProduct;
 }
 
 const ProductCard = (props: Props) => {
-
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {product} = props;
@@ -30,14 +31,12 @@ const ProductCard = (props: Props) => {
   );
 
   const onAddToBasket = (item: IProduct) => {
+    dispatch(addToBasketAction(item));
+    navigation.navigate('BasketScreen');
+  };
 
-    
-        dispatch(addToBasketAction(item));
-        navigation.navigate('BasketScreen')
-
-
-      
-    
+  const addToFavorites = (item: IProduct) => {
+    dispatch(addToFavoritesAction(item));
   };
 
   return (
@@ -46,10 +45,14 @@ const ProductCard = (props: Props) => {
         navigation.navigate('ProductDetailScreen', {product: product})
       }
       style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{uri: 'https://placeimg.com/640/480/abstract'}}
-      />
+      <View>
+        <Image style={styles.image} source={{uri: product.image}} />
+        <TouchableOpacity
+          onPress={()=>addToFavorites(product)} 
+          style={{position: 'absolute', right: 20}}>
+          <Icon name={product.isFavorite?"star": "staro"} size={20} color={Colors.yellow} />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.text_price}>{product.price} ₺</Text>
       <Text style={styles.text_productName}>{product.name}</Text>
       <TouchableOpacity

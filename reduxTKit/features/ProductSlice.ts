@@ -6,6 +6,7 @@ import {IProduct} from '../../src/models/ProductModel';
 
 const initialState: IInitialProductState = {
   allProducts: [],
+  filteredProducts: [],
   productsInBasket: [],
   totalProductPrice: 0,
 };
@@ -17,8 +18,20 @@ const ProductSlice = createSlice({
     allProductAction: (state, action) => {
       state.value.allProducts = action.payload;
       state.value.allProducts.map(function (obj) {
-        obj.total = 0;
-      })
+        (obj.total = 0), (obj.isFavorite = false);
+      });
+    },
+    filteredProductAction: (state, action) => {
+      state.value.filteredProducts = action.payload;
+    },
+    addToFavoritesAction: (state, action) => {
+      let currentProducts = state.value.allProducts.slice();
+      currentProducts.map(item => {
+        if (item.id === action.payload.id) {
+          item.isFavorite = !item.isFavorite;
+        }
+      });
+
     },
     addToBasketAction: (state, action) => {
       let existingProducts = current(state).value.productsInBasket.find(
@@ -82,6 +95,8 @@ export default ProductSlice.reducer;
 export const {
   allProductAction,
   addToBasketAction,
+  addToFavoritesAction,
+  filteredProductAction,
   productAmountIncrement,
   productAmountDecrement,
 } = ProductSlice.actions;
