@@ -20,6 +20,7 @@ interface Props {
 }
 
 const ProductCard = (props: Props) => {
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {product} = props;
@@ -32,6 +33,8 @@ const ProductCard = (props: Props) => {
 
     
         dispatch(addToBasketAction(item));
+        navigation.navigate('BasketScreen')
+
 
       
     
