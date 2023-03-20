@@ -49,7 +49,7 @@ const ProductCard = (props: Props) => {
         <Image style={styles.image} source={{uri: product.image}} />
         <TouchableOpacity
           onPress={()=>addToFavorites(product)} 
-          style={{position: 'absolute', right: 20}}>
+          style={{position: 'absolute', right: 5}}>
           <Icon name={product.isFavorite?"star": "staro"} size={20} color={Colors.yellow} />
         </TouchableOpacity>
       </View>

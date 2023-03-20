@@ -4,6 +4,7 @@ import {createSlice, current} from '@reduxjs/toolkit';
 import {IInitialProductState} from '../../src/models/InitialProductState';
 import {IProduct} from '../../src/models/ProductModel';
 
+
 const initialState: IInitialProductState = {
   allProducts: [],
   filteredProducts: [],
@@ -34,15 +35,15 @@ const ProductSlice = createSlice({
 
     },
     addToBasketAction: (state, action) => {
-      let existingProducts = current(state).value.productsInBasket.find(
-        (item: IProduct) => {
-          item.id === action.payload.id;
-        },
-      );
-      if (existingProducts === undefined) {
-        state.value.productsInBasket.push({...action.payload, total: 1});
-      } else {
-        existingProducts.total++;
+      if(state.value.productsInBasket.find(product => product.id === action.payload.id)){
+        state.value.productsInBasket.map(product => {
+          if(product.id === action.payload.id){
+            product.total += 1
+          }
+        })
+        state.value.productsInBasket = state.value.productsInBasket
+      }else{
+        state.value.productsInBasket.push({...action.payload,total:1})
       }
 
       var temp = 0;
