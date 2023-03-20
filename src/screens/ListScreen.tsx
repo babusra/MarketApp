@@ -21,30 +21,43 @@ import {useDispatch, useSelector} from 'react-redux';
 import {allProductAction} from '../../reduxTKit/features/ProductSlice';
 import {RootState} from '../../reduxTKit/Store';
 import FilterModal from '../components/FilterModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ListScreen = () => {
   const dispatch = useDispatch();
   const products = useSelector(
     (state: RootState) => state.product.value.allProducts,
   );
-  console.log(products)
-  const filteredProductsByOptions = useSelector((state:RootState)=>state.product.value.filteredProducts)
-  console.log(filteredProductsByOptions)
+
+  const filteredProductsByOptions = useSelector(
+    (state: RootState) => state.product.value.filteredProducts,
+  );
+  console.log(filteredProductsByOptions);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [searchItem, setSearchItem] = useState('');
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(end_points.getAllProducts)
-      .then(response => dispatch(allProductAction(response.data)));
+    axios.get(end_points.getAllProducts).then(
+      response => AsyncStorage.setItem('products', JSON.stringify(response?.data)),
+
+    ).then(()=>{
+      AsyncStorage.getItem('products')
+      .then(JSON.parse)
+      .then(value => {
+        dispatch(allProductAction(value));
+      });
+    })
   }, []);
 
-  
 
   const onSearchFilter = (text: string) => {
     if (text) {
-      const filteredData: IProduct[] = (filteredProductsByOptions.length!==0? filteredProductsByOptions: products).filter(item =>
+      const filteredData: IProduct[] = (
+        filteredProductsByOptions.length !== 0
+          ? filteredProductsByOptions
+          : products
+      ).filter(item =>
         item.name.toLocaleLowerCase().startsWith(text.toLocaleLowerCase()),
       );
       setFilteredProducts(filteredData);
@@ -77,10 +90,19 @@ const ListScreen = () => {
           }}
         />
         <BottomSheet isVisible={visible}>
-         <FilterModal products={products}  onPressClose={()=>setVisible(false)}/>
+          <FilterModal
+            products={products}
+            onPressClose={() => setVisible(false)}
+          />
         </BottomSheet>
         <Products
-          products={filteredProducts.length !== 0 ? filteredProducts :filteredProductsByOptions.length!==0? filteredProductsByOptions: products}
+          products={
+            filteredProducts.length !== 0
+              ? filteredProducts
+              : filteredProductsByOptions.length !== 0
+              ? filteredProductsByOptions
+              : products
+          }
         />
       </View>
     </View>
