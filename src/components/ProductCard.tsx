@@ -32,7 +32,6 @@ const ProductCard = (props: Props) => {
 
   const onAddToBasket = (item: IProduct) => {
     dispatch(addToBasketAction(item));
-    navigation.navigate('BasketScreen');
   };
 
   const addToFavorites = (item: IProduct) => {

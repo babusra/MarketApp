@@ -32,25 +32,15 @@ const ListScreen = () => {
   const filteredProductsByOptions = useSelector(
     (state: RootState) => state.product.value.filteredProducts,
   );
-  console.log(filteredProductsByOptions);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [searchItem, setSearchItem] = useState('');
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    axios.get(end_points.getAllProducts).then(
-      response => AsyncStorage.setItem('products', JSON.stringify(response?.data)),
-
-    ).then(()=>{
-      AsyncStorage.getItem('products')
-      .then(JSON.parse)
-      .then(value => {
-        dispatch(allProductAction(value));
-      });
-    })
+    axios
+      .get(end_points.getAllProducts)
+      .then(response => dispatch(allProductAction(response.data)))
   }, []);
-
-
   const onSearchFilter = (text: string) => {
     if (text) {
       const filteredData: IProduct[] = (

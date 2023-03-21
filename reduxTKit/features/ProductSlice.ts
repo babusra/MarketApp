@@ -1,13 +1,17 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import {createSlice, current} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, current} from '@reduxjs/toolkit';
 import {IInitialProductState} from '../../src/models/InitialProductState';
 import {IProduct} from '../../src/models/ProductModel';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const initialState: IInitialProductState = {
   allProducts: [],
   filteredProducts: [],
+  favoritesProducts: [],
   productsInBasket: [],
   totalProductPrice: 0,
 };
@@ -32,18 +36,22 @@ const ProductSlice = createSlice({
           item.isFavorite = !item.isFavorite;
         }
       });
-
+      state.value.favoritesProducts = currentProducts;
     },
     addToBasketAction: (state, action) => {
-      if(state.value.productsInBasket.find(product => product.id === action.payload.id)){
+      if (
+        state.value.productsInBasket.find(
+          product => product.id === action.payload.id,
+        )
+      ) {
         state.value.productsInBasket.map(product => {
-          if(product.id === action.payload.id){
-            product.total += 1
+          if (product.id === action.payload.id) {
+            product.total += 1;
           }
-        })
-        state.value.productsInBasket = state.value.productsInBasket
-      }else{
-        state.value.productsInBasket.push({...action.payload,total:1})
+        });
+        state.value.productsInBasket = state.value.productsInBasket;
+      } else {
+        state.value.productsInBasket.push({...action.payload, total: 1});
       }
 
       var temp = 0;
@@ -90,6 +98,7 @@ const ProductSlice = createSlice({
       }
     },
   },
+
 });
 
 export default ProductSlice.reducer;

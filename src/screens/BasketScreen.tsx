@@ -11,6 +11,7 @@ import {Colors} from '../constants/Colors';
 import ProductsInBasket from '../components/ProductsInBasket';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../reduxTKit/Store';
+import {current} from '@reduxjs/toolkit';
 
 const BasketScreen = () => {
   const totalProductPrice = useSelector(
@@ -18,7 +19,7 @@ const BasketScreen = () => {
   );
 
   return (
-    <View style={{flex:1}}>
+    <View style={{flex: 1}}>
       <Header />
       <View style={styles.body}>
         <ProductsInBasket />
@@ -26,11 +27,10 @@ const BasketScreen = () => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            position:'absolute',
-            width:'100%',
-            alignSelf:'center',
-            bottom:moderateScale(10)
-
+            position: 'absolute',
+            width: '100%',
+            alignSelf: 'center',
+            bottom: moderateScale(10),
           }}>
           <View>
             <Text style={{color: Colors.blue, fontSize: 16}}>Price:</Text>
@@ -49,7 +49,7 @@ export default BasketScreen;
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: horizontalScale(15),
-    flex:1
+    flex: 1,
   },
   button: {
     backgroundColor: Colors.blue,

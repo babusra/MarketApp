@@ -17,15 +17,10 @@ interface Props {
 
 const ProductDetailScreen = (props: Props) => {
   const product = props?.route?.params?.product;
-
-
   const dispatch = useDispatch();
-  const navigation = useNavigation();
-
 
   const onAddToBasket = (item: IProduct) => {
     dispatch(addToBasketAction(item));
-    navigation.navigate('BasketScreen');
   };
   return (
     <View>
